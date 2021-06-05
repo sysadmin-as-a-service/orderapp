@@ -7,7 +7,8 @@ BEGIN
     SET NOCOUNT ON
     SELECT 
         [id],
-        [name]
+        [name],
+        [address]
     FROM
         [customers]
 END
