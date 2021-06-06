@@ -35,6 +35,7 @@ namespace orderapp.Controllers
                     SELECT *
                     FROM orders
                     LEFT JOIN orderitems ON orders.id=orderitems.orderid
+                    LEFT JOIN customers ON orders.customerId=customers.id
                     WHERE orders.customerId = @CustomerId
                     ";
 
@@ -43,9 +44,9 @@ namespace orderapp.Controllers
                 // need to create this outside the lambda
                 var orderDictionary = new Dictionary<int, Order>();
 
-                var data = db.Query<Order, OrderItem, Order>(
+                var data = (await db.QueryAsync<Order, OrderItem, Customer, Order>(
                     sql,
-                    (order, orderItem) => 
+                    (order, orderItem, customer) => 
                     { 
                         // create a new dummy obj
                         Order orderEntry;
@@ -57,15 +58,17 @@ namespace orderapp.Controllers
                         {
                             orderEntry = order;
                             orderEntry.OrderItems = new List<OrderItem>();
+                            orderEntry.Customer = customer;
                             orderDictionary.Add(orderEntry.Id, orderEntry);
                         }
 
                         // add orderItem to the list of orderItems for 
                         orderEntry.OrderItems.Add(orderItem);
+                        orderEntry.Customer = customer;
                         return orderEntry;
                     },
                     parameters
-                )
+                ))
                 .Distinct()
                 .ToList();
 
