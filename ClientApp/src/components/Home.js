@@ -56,7 +56,17 @@ export class Home extends Component {
 
         {
           this.state.selectedCustomerId != '' && !this.state.ordersLoading && !this.state.error &&
-          <Table contents={this.state.orders} />
+          <Table contents={this.state.orders.map(order => (
+
+              { 
+                "Customer": order.customer.name,
+                "Order Date": order.date,
+                "Order Reference": order.reference,
+                "Order Quantity": order.orderItems.reduce((a, b) => a + b.quantity, 0)
+
+              }
+            ) 
+            )} />
         }
 
         {
