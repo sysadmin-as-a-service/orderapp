@@ -10,7 +10,7 @@ export class Home extends Component {
        customers: [],
        selectedCustomerId: '',
        orders: [],
-       ordersLoading: true,
+       ordersLoading: false,
        error: false
     }
 
@@ -45,16 +45,22 @@ export class Home extends Component {
         <h1>Please Select a Customer</h1>
 
         <select onChange={this.handleChange}>
+          <option selected disabled hidden>(Select a customer)</option>
 
           {this.state.customers.map((customer, index) => (
             <option key={index} value={customer.id}>{customer.name}</option>
-          )) }
+          )) 
+          }
 
         </select>
 
         {
-          this.state.selectedCustomerId != '' && !this.state.ordersLoading && !this.state.error ?
-          <Table contents={this.state.orders} /> :
+          this.state.selectedCustomerId != '' && !this.state.ordersLoading && !this.state.error &&
+          <Table contents={this.state.orders} />
+        }
+
+        {
+          this.state.ordersLoading &&
           <div>Loading orders...</div>
         }
 
