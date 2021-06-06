@@ -65,7 +65,9 @@ namespace orderapp.Controllers
                         return orderEntry;
                     },
                     parameters
-                ).Distinct().ToList();
+                )
+                .Distinct()
+                .ToList();
 
 
                 return Ok(data);
